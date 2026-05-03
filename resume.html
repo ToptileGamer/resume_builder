@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Resume</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="resume" id="resume">
+
+  <div class="header">
+    <h1 id="r-name"></h1>
+    <p id="r-title"></p>
+  </div>
+
+  <div class="content">
+
+    <!-- LEFT -->
+    <div class="left">
+      <h3>Contact</h3>
+      <p id="r-phone"></p>
+      <p id="r-email"></p>
+      <p id="r-address"></p>
+
+      <h3>Education</h3>
+      <p id="r-education"></p>
+
+      <h3>Skills</h3>
+      <ul id="r-skills"></ul>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+      <h3>Profile</h3>
+      <p id="r-profile"></p>
+
+      <h3>Experience</h3>
+      <p id="r-experience"></p>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="actions">
+  <button onclick="downloadPDF()">Download PDF</button>
+  <button onclick="goBack()">Edit Resume</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+const data = JSON.parse(localStorage.getItem("resumeData"));
+
+// Fill data
+document.getElementById("r-name").innerText = data.name;
+document.getElementById("r-title").innerText = data.title;
+document.getElementById("r-phone").innerText = data.phone;
+document.getElementById("r-email").innerText = data.email;
+document.getElementById("r-address").innerText = data.address;
+document.getElementById("r-profile").innerText = data.profile;
+document.getElementById("r-education").innerText = data.education;
+document.getElementById("r-experience").innerText = data.experience;
+
+// Skills list
+let skills = data.skills.split(",");
+let ul = document.getElementById("r-skills");
+
+skills.forEach(skill => {
+  let li = document.createElement("li");
+  li.innerText = skill.trim();
+  ul.appendChild(li);
+});
+
+// PDF
+async function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+
+  const canvas = await html2canvas(document.getElementById("resume"), { scale: 2 });
+  const imgData = canvas.toDataURL("image/png");
+
+  const pdf = new jsPDF("p", "mm", "a4");
+
+  const width = pdf.internal.pageSize.getWidth();
+  const height = (canvas.height * width) / canvas.width;
+
+  pdf.addImage(imgData, "PNG", 0, 0, width, height);
+  pdf.save("resume.pdf");
+}
+
+// Back button
+function goBack() {
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
