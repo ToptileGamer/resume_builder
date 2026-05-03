@@ -1,7 +1,7 @@
 body {
-  margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: #eef2f3;
+  background: #f4f6f8;
+  margin: 0;
 }
 
 /* FORM */
@@ -25,14 +25,14 @@ button {
   padding: 10px;
   margin-top: 10px;
   border: none;
-  background: #4CAF81;
+  background: #0d2c5a;
   color: white;
   border-radius: 6px;
   cursor: pointer;
 }
 
 button:hover {
-  background: #3a8f6a;
+  background: #091f3d;
 }
 
 /* RESUME */
@@ -40,62 +40,66 @@ button:hover {
   max-width: 900px;
   margin: 20px auto;
   background: white;
-  border-radius: 10px;
-  overflow: hidden;
 }
 
-.header {
-  background: #9fb8a5;
-  text-align: center;
-  padding: 30px;
-}
-
-.content {
-  display: flex;
-}
-
-.left {
-  width: 35%;
-  background: #f3f3f3;
+/* HEADER */
+.top {
+  background: #0d2c5a;
+  color: white;
   padding: 20px;
 }
 
-.right {
-  width: 65%;
+.top h1 {
+  margin: 0;
+}
+
+.top-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* BODY */
+.main {
+  display: flex;
+}
+
+.sidebar {
+  width: 30%;
+  background: #e9edf3;
+  padding: 20px;
+}
+
+.content {
+  width: 70%;
   padding: 20px;
 }
 
 h3 {
-  border-bottom: 2px solid #9fb8a5;
-  padding-bottom: 5px;
+  border-bottom: 2px solid #0d2c5a;
 }
 
-/* ACTION BUTTONS */
+/* BUTTON AREA */
 .actions {
   text-align: center;
   margin: 20px;
 }
 
-.actions button {
-  margin: 5px;
-}
-
 /* MOBILE */
 @media (max-width: 768px) {
 
-  .content {
+  .top-info {
     flex-direction: column;
   }
 
-  .left, .right {
+  .main {
+    flex-direction: column;
+  }
+
+  .sidebar, .content {
     width: 100%;
   }
 
   .form {
-    margin: 10px;
-  }
-
-  .resume {
     margin: 10px;
   }
 

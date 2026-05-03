@@ -37,6 +37,8 @@ function generate() {
   });
 }
 
+
+
   // Skills as list
   let skillsList = skills.value.split(",");
   let ul = document.getElementById("r-skills");

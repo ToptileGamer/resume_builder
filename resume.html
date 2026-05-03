@@ -9,34 +9,60 @@
 
 <div class="resume" id="resume">
 
-  <div class="header">
+  <!-- HEADER -->
+  <div class="top">
     <h1 id="r-name"></h1>
-    <p id="r-title"></p>
+
+    <div class="top-info">
+      <div>
+        <p>📞 <span id="r-phone"></span></p>
+        <p>✉️ <span id="r-email"></span></p>
+        <p>📍 <span id="r-address"></span></p>
+      </div>
+
+      <div>
+        <p><b>Father:</b> <span id="r-father"></span></p>
+        <p><b>Mother:</b> <span id="r-mother"></span></p>
+      </div>
+    </div>
   </div>
 
-  <div class="content">
+  <!-- BODY -->
+  <div class="main">
 
     <!-- LEFT -->
-    <div class="left">
-      <h3>Contact</h3>
-      <p id="r-phone"></p>
-      <p id="r-email"></p>
-      <p id="r-address"></p>
-
+    <div class="sidebar">
       <h3>Education</h3>
       <p id="r-education"></p>
 
-      <h3>Skills</h3>
-      <ul id="r-skills"></ul>
+      <h3>Languages</h3>
+      <p id="r-languages"></p>
+
+      <h3>Hobbies</h3>
+      <p id="r-hobbies"></p>
     </div>
 
     <!-- RIGHT -->
-    <div class="right">
-      <h3>Profile</h3>
+    <div class="content">
+
+      <h3>Career Objective</h3>
       <p id="r-profile"></p>
 
-      <h3>Experience</h3>
+      <h3>Work Experience</h3>
       <p id="r-experience"></p>
+
+      <h3>Skills</h3>
+      <ul id="r-skills"></ul>
+
+      <h3>Technical Skills</h3>
+      <p id="r-tech"></p>
+
+      <h3>Projects</h3>
+      <p id="r-projects"></p>
+
+      <h3>Declaration</h3>
+      <p>I hereby declare that the information is true and correct.</p>
+
     </div>
 
   </div>
@@ -55,23 +81,22 @@
 const data = JSON.parse(localStorage.getItem("resumeData"));
 
 // Fill data
-document.getElementById("r-name").innerText = data.name;
-document.getElementById("r-title").innerText = data.title;
-document.getElementById("r-phone").innerText = data.phone;
-document.getElementById("r-email").innerText = data.email;
-document.getElementById("r-address").innerText = data.address;
-document.getElementById("r-profile").innerText = data.profile;
-document.getElementById("r-education").innerText = data.education;
-document.getElementById("r-experience").innerText = data.experience;
+Object.keys(data).forEach(key => {
+  if (document.getElementById("r-" + key)) {
+    document.getElementById("r-" + key).innerText = data[key];
+  }
+});
 
 // Skills list
-let skills = data.skills.split(",");
+let skills = (data.skills || "").split(",");
 let ul = document.getElementById("r-skills");
 
 skills.forEach(skill => {
-  let li = document.createElement("li");
-  li.innerText = skill.trim();
-  ul.appendChild(li);
+  if (skill.trim() !== "") {
+    let li = document.createElement("li");
+    li.innerText = skill.trim();
+    ul.appendChild(li);
+  }
 });
 
 // PDF
@@ -82,7 +107,6 @@ async function downloadPDF() {
   const imgData = canvas.toDataURL("image/png");
 
   const pdf = new jsPDF("p", "mm", "a4");
-
   const width = pdf.internal.pageSize.getWidth();
   const height = (canvas.height * width) / canvas.width;
 
@@ -90,7 +114,7 @@ async function downloadPDF() {
   pdf.save("resume.pdf");
 }
 
-// Back button
+// Back
 function goBack() {
   window.location.href = "index.html";
 }

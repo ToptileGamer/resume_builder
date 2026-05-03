@@ -10,50 +10,52 @@
 <div class="form">
   <h2>Build Your Resume</h2>
 
-  <input id="name" placeholder="Full Name" >
-  <input id="title" placeholder="Job Title">
+  <input id="name" placeholder="Full Name">
   <input id="phone" placeholder="Phone">
   <input id="email" placeholder="Email">
   <input id="address" placeholder="Address">
 
-  <textarea id="profile" placeholder="Profile"></textarea>
+  <input id="father" placeholder="Father Name">
+  <input id="mother" placeholder="Mother Name">
+
+  <textarea id="profile" placeholder="Career Objective"></textarea>
   <textarea id="education" placeholder="Education"></textarea>
+  <textarea id="languages" placeholder="Languages"></textarea>
+  <textarea id="hobbies" placeholder="Hobbies"></textarea>
+  <textarea id="experience" placeholder="Work Experience"></textarea>
   <textarea id="skills" placeholder="Skills (comma separated)"></textarea>
-  <textarea id="experience" placeholder="Experience"></textarea>
+  <textarea id="tech" placeholder="Technical Skills"></textarea>
+  <textarea id="projects" placeholder="Projects"></textarea>
 
   <button onclick="goToResume()">Generate Resume</button>
 </div>
 
 <script>
-// PREFILL DATA
+// Autofill when coming back
 window.onload = function () {
   const data = JSON.parse(localStorage.getItem("resumeData"));
 
   if (data) {
-    document.getElementById("name").value = data.name || "";
-    document.getElementById("title").value = data.title || "";
-    document.getElementById("phone").value = data.phone || "";
-    document.getElementById("email").value = data.email || "";
-    document.getElementById("address").value = data.address || "";
-    document.getElementById("profile").value = data.profile || "";
-    document.getElementById("education").value = data.education || "";
-    document.getElementById("skills").value = data.skills || "";
-    document.getElementById("experience").value = data.experience || "";
+    for (let key in data) {
+      if (document.getElementById(key)) {
+        document.getElementById(key).value = data[key];
+      }
+    }
   }
 };
 
 function goToResume() {
-  const data = {
-    name: document.getElementById("name").value,
-    title: document.getElementById("title").value,
-    phone: document.getElementById("phone").value,
-    email: document.getElementById("email").value,
-    address: document.getElementById("address").value,
-    profile: document.getElementById("profile").value,
-    education: document.getElementById("education").value,
-    skills: document.getElementById("skills").value,
-    experience: document.getElementById("experience").value,
-  };
+  const fields = [
+    "name","phone","email","address","father","mother",
+    "profile","education","languages","hobbies",
+    "experience","skills","tech","projects"
+  ];
+
+  let data = {};
+
+  fields.forEach(id => {
+    data[id] = document.getElementById(id).value;
+  });
 
   localStorage.setItem("resumeData", JSON.stringify(data));
   window.location.href = "resume.html";
