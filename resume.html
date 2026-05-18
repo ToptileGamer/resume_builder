@@ -4,200 +4,226 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Your Resume</title>
-
   <link rel="stylesheet" href="style.css">
-
-  <!-- NETLIFY IDENTITY -->
-  <script
-    type="text/javascript"
-    src="https://identity.netlify.com/v1/netlify-identity-widget.js">
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
-<body>
+<body class="resume-page">
 
-<div class="resume" id="resume">
-
-  <!-- HEADER -->
-  <div class="top">
-
-    <h1 id="r-name"></h1>
-
-    <div class="top-info">
-
-      <div>
-        <p>📞 <span id="r-phone"></span></p>
-        <p>✉️ <span id="r-email"></span></p>
-        <p>📍 <span id="r-address"></span></p>
-      </div>
-
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-brand">
+      <h1>Resume Builder</h1>
     </div>
+    <div class="nav-menu">
+      <span class="user-email" id="userEmail"></span>
+      <button class="btn btn-secondary" onclick="goBack()">Edit Resume</button>
+      <button class="btn btn-secondary" onclick="logout()">Logout</button>
+    </div>
+  </div>
+</nav>
 
+<!-- RESUME CONTAINER -->
+<div class="resume-container">
+  <div class="resume-actions">
+    <button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
   </div>
 
-  <!-- BODY -->
-  <div class="main">
-
-    <!-- LEFT -->
-    <div class="sidebar">
-
-      <div>
-
-        <h3>Personal Details</h3>
-
-        <p>
-          <b>Father:</b>
-          <span id="r-father"></span>
-        </p>
-
-        <p>
-          <b>Mother:</b>
-          <span id="r-mother"></span>
-        </p>
-
+  <!-- RESUME CONTENT -->
+  <div id="resume">
+    <!-- HEADER -->
+    <div class="resume-header">
+      <div id="r-name" class="resume-header-name"></div>
+      <div id="r-title"></div>
+      <div class="resume-contact">
+        <span id="r-phone"></span> | 
+        <span id="r-email"></span> | 
+        <span id="r-address"></span>
       </div>
-
-      <h3>Education</h3>
-      <p id="r-education"></p>
-
-      <h3>Languages</h3>
-      <p id="r-languages"></p>
-
-      <h3>Hobbies</h3>
-      <p id="r-hobbies"></p>
-
     </div>
 
-    <!-- RIGHT -->
-    <div class="content">
-
+    <!-- CAREER OBJECTIVE -->
+    <div class="resume-section">
       <h3>Career Objective</h3>
       <p id="r-profile"></p>
-
-      <h3>Work Experience</h3>
-      <p id="r-experience"></p>
-
-      <h3>Skills</h3>
-      <ul id="r-skills"></ul>
-
-      <h3>Technical Skills</h3>
-      <p id="r-tech"></p>
-
-      <h3>Projects</h3>
-      <p id="r-projects"></p>
-
-      <h3>Declaration</h3>
-
-      <p>
-        I hereby declare that the information
-        provided above is true and correct.
-      </p>
-
     </div>
 
+    <!-- WORK EXPERIENCE -->
+    <div class="resume-section">
+      <h3>Work Experience</h3>
+      <p id="r-experience"></p>
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="resume-section">
+      <h3>Education</h3>
+      <p id="r-education"></p>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="resume-section">
+      <h3>Skills</h3>
+      <ul id="r-skills"></ul>
+    </div>
+
+    <!-- TECHNICAL SKILLS -->
+    <div class="resume-section">
+      <h3>Technical Skills</h3>
+      <p id="r-tech"></p>
+    </div>
+
+    <!-- LANGUAGES -->
+    <div class="resume-section">
+      <h3>Languages</h3>
+      <p id="r-languages"></p>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="resume-section">
+      <h3>Projects</h3>
+      <p id="r-projects"></p>
+    </div>
+
+    <!-- HOBBIES -->
+    <div class="resume-section">
+      <h3>Hobbies</h3>
+      <p id="r-hobbies"></p>
+    </div>
+
+    <!-- DECLARATION -->
+    <div class="resume-section">
+      <h3>Declaration</h3>
+      <p>I hereby declare that the information provided above is true and correct.</p>
+    </div>
   </div>
-
 </div>
-
-<!-- ACTIONS -->
-<div class="actions">
-
-  <button onclick="downloadPDF()">
-    Download PDF
-  </button>
-
-  <button onclick="goBack()">
-    Edit Resume
-  </button>
-
-  <button onclick="logout()">
-    Logout
-  </button>
-
-</div>
-
-
-<!-- PDF LIBRARIES -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 
 <script>
-
-// ==========================
+// =============================
 // AUTH CHECK
-// ==========================
+// =============================
 
-if (window.netlifyIdentity) {
-
-  netlifyIdentity.on("init", user => {
-
-    if (!user) {
-
-      alert("Please Login First");
-
-      window.location.href = "index.html";
-
-    }
-
-  });
-
-  netlifyIdentity.init();
-
+function getStoredUser() {
+  const user = localStorage.getItem('currentUser');
+  return user ? JSON.parse(user) : null;
 }
 
+window.addEventListener('DOMContentLoaded', function() {
+  const user = getStoredUser();
 
-// ==========================
-// LOAD DATA
-// ==========================
-
-const data =
-  JSON.parse(localStorage.getItem("resumeData")) || {};
-
-
-// ==========================
-// FILL DATA
-// ==========================
-
-Object.keys(data).forEach(key => {
-
-  if (document.getElementById("r-" + key)) {
-
-    document.getElementById("r-" + key).innerText =
-      data[key];
-
+  if (!user) {
+    window.location.href = 'auth.html';
+    return;
   }
 
+  document.getElementById('userEmail').textContent = user.email;
+  loadAndDisplayResume(user.id);
 });
 
+// =============================
+// LOAD & DISPLAY RESUME
+// =============================
 
-// ==========================
-// SKILLS LIST
-// ==========================
+function loadAndDisplayResume(userId) {
+  const resumeData = localStorage.getItem(`resume_${userId}`);
+  const data = resumeData ? JSON.parse(resumeData) : {};
 
-let skills =
-  (data.skills || "").split(",");
+  // Set all fields
+  const fields = [
+    'name',
+    'title',
+    'phone',
+    'email',
+    'address',
+    'profile',
+    'experience',
+    'education',
+    'skills',
+    'tech',
+    'languages',
+    'projects',
+    'hobbies'
+  ];
 
-let ul =
-  document.getElementById("r-skills");
+  fields.forEach(field => {
+    const value = data[field] || '';
+    const element = document.getElementById('r-' + field);
 
+    if (element) {
+      if (field === 'name') {
+        element.className = 'resume-header-name';
+        element.textContent = value || 'Your Name';
+      } else if (field === 'title') {
+        element.textContent = value || 'Professional Title';
+      } else {
+        element.textContent = value;
+      }
+    }
+  });
 
-skills.forEach(skill => {
+  // Handle skills list
+  const skillsList = (data.skills || '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(s => s);
 
-  if (skill.trim() !== "") {
+  const skillsUl = document.getElementById('r-skills');
+  skillsUl.innerHTML = '';
 
-    let li =
-      document.createElement("li");
+  skillsList.forEach(skill => {
+    const li = document.createElement('li');
+    li.textContent = skill;
+    skillsUl.appendChild(li);
+  });
+}
 
-    li.innerText =
-      skill.trim();
+// =============================
+// DOWNLOAD PDF
+// =============================
 
-    ul.appendChild(li);
+async function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const resume = document.getElementById('resume');
 
+  if (!resume) {
+    alert('Resume not found');
+    return;
   }
 
-});
+  try {
+    const canvas = await html2canvas(resume, { scale: 2 });
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const width = pdf.internal.pageSize.getWidth();
+    const height = (canvas.height * width) / canvas.width;
 
+    pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+    pdf.save('resume.pdf');
+  } catch (error) {
+    console.error('PDF generation error:', error);
+    alert('Error generating PDF');
+  }
+}
+
+// =============================
+// NAVIGATION
+// =============================
+
+function goBack() {
+  window.location.href = 'dashboard.html';
+}
+
+function logout() {
+  if (confirm('Are you sure you want to logout?')) {
+    localStorage.removeItem('currentUser');
+    window.location.href = 'auth.html';
+  }
+}
+</script>
+
+</body>
+</html>
 
 // ==========================
 // DOWNLOAD PDF
