@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Your Resume</title>
+
   <link rel="stylesheet" href="style.css">
+
+  <!-- NETLIFY IDENTITY -->
+  <script
+    type="text/javascript"
+    src="https://identity.netlify.com/v1/netlify-identity-widget.js">
+  </script>
 </head>
 <body>
 
@@ -11,17 +19,19 @@
 
   <!-- HEADER -->
   <div class="top">
+
     <h1 id="r-name"></h1>
 
     <div class="top-info">
+
       <div>
         <p>📞 <span id="r-phone"></span></p>
         <p>✉️ <span id="r-email"></span></p>
         <p>📍 <span id="r-address"></span></p>
       </div>
 
-      
     </div>
+
   </div>
 
   <!-- BODY -->
@@ -31,10 +41,21 @@
     <div class="sidebar">
 
       <div>
-        <h3>Personal details</h3>
-        <p><b>Father:</b> <span id="r-father"></span></p>
-        <p><b>Mother:</b> <span id="r-mother"></span></p>
+
+        <h3>Personal Details</h3>
+
+        <p>
+          <b>Father:</b>
+          <span id="r-father"></span>
+        </p>
+
+        <p>
+          <b>Mother:</b>
+          <span id="r-mother"></span>
+        </p>
+
       </div>
+
       <h3>Education</h3>
       <p id="r-education"></p>
 
@@ -43,6 +64,7 @@
 
       <h3>Hobbies</h3>
       <p id="r-hobbies"></p>
+
     </div>
 
     <!-- RIGHT -->
@@ -64,7 +86,11 @@
       <p id="r-projects"></p>
 
       <h3>Declaration</h3>
-      <p>I hereby declare that the information is true and correct.</p>
+
+      <p>
+        I hereby declare that the information
+        provided above is true and correct.
+      </p>
 
     </div>
 
@@ -72,55 +98,175 @@
 
 </div>
 
+<!-- ACTIONS -->
 <div class="actions">
-  <button onclick="downloadPDF()">Download PDF</button>
-  <button onclick="goBack()">Edit Resume</button>
+
+  <button onclick="downloadPDF()">
+    Download PDF
+  </button>
+
+  <button onclick="goBack()">
+    Edit Resume
+  </button>
+
+  <button onclick="logout()">
+    Logout
+  </button>
+
 </div>
 
+
+<!-- PDF LIBRARIES -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<script>
-const data = JSON.parse(localStorage.getItem("resumeData"));
 
-// Fill data
+<script>
+
+// ==========================
+// AUTH CHECK
+// ==========================
+
+if (window.netlifyIdentity) {
+
+  netlifyIdentity.on("init", user => {
+
+    if (!user) {
+
+      alert("Please Login First");
+
+      window.location.href = "index.html";
+
+    }
+
+  });
+
+  netlifyIdentity.init();
+
+}
+
+
+// ==========================
+// LOAD DATA
+// ==========================
+
+const data =
+  JSON.parse(localStorage.getItem("resumeData")) || {};
+
+
+// ==========================
+// FILL DATA
+// ==========================
+
 Object.keys(data).forEach(key => {
+
   if (document.getElementById("r-" + key)) {
-    document.getElementById("r-" + key).innerText = data[key];
+
+    document.getElementById("r-" + key).innerText =
+      data[key];
+
   }
+
 });
 
-// Skills list
-let skills = (data.skills || "").split(",");
-let ul = document.getElementById("r-skills");
+
+// ==========================
+// SKILLS LIST
+// ==========================
+
+let skills =
+  (data.skills || "").split(",");
+
+let ul =
+  document.getElementById("r-skills");
+
 
 skills.forEach(skill => {
+
   if (skill.trim() !== "") {
-    let li = document.createElement("li");
-    li.innerText = skill.trim();
+
+    let li =
+      document.createElement("li");
+
+    li.innerText =
+      skill.trim();
+
     ul.appendChild(li);
+
   }
+
 });
 
-// PDF
+
+// ==========================
+// DOWNLOAD PDF
+// ==========================
+
 async function downloadPDF() {
+
   const { jsPDF } = window.jspdf;
 
-  const canvas = await html2canvas(document.getElementById("resume"), { scale: 2 });
-  const imgData = canvas.toDataURL("image/png");
+  const canvas =
+    await html2canvas(
+      document.getElementById("resume"),
+      { scale: 2 }
+    );
 
-  const pdf = new jsPDF("p", "mm", "a4");
-  const width = pdf.internal.pageSize.getWidth();
-  const height = (canvas.height * width) / canvas.width;
+  const imgData =
+    canvas.toDataURL("image/png");
 
-  pdf.addImage(imgData, "PNG", 0, 0, width, height);
+  const pdf =
+    new jsPDF("p", "mm", "a4");
+
+  const width =
+    pdf.internal.pageSize.getWidth();
+
+  const height =
+    (canvas.height * width) /
+    canvas.width;
+
+  pdf.addImage(
+    imgData,
+    "PNG",
+    0,
+    0,
+    width,
+    height
+  );
+
   pdf.save("resume.pdf");
+
 }
 
-// Back
+
+// ==========================
+// BACK
+// ==========================
+
 function goBack() {
-  window.location.href = "index.html";
+
+  window.location.href =
+    "index.html";
+
 }
+
+
+// ==========================
+// LOGOUT
+// ==========================
+
+function logout() {
+
+  netlifyIdentity.logout();
+
+  alert("Logged Out");
+
+  window.location.href =
+    "index.html";
+
+}
+
 </script>
 
 </body>

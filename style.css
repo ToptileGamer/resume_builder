@@ -1,106 +1,248 @@
 body {
+
   font-family: 'Segoe UI', sans-serif;
   background: #f4f6f8;
   margin: 0;
+  padding: 0;
+
 }
 
-/* FORM */
-.form {
+
+/* =========================
+   AUTH
+========================= */
+
+.auth-buttons {
+
   max-width: 500px;
-  margin: 40px auto;
+  margin: 20px auto;
+  display: flex;
+  gap: 10px;
+
+}
+
+.user-info {
+
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 20px;
+
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.form {
+
+  max-width: 500px;
+  margin: 20px auto;
   background: white;
   padding: 20px;
   border-radius: 10px;
+
+  box-shadow:
+    0 5px 15px rgba(0,0,0,0.1);
+
 }
 
-input, textarea {
+
+.form h2 {
+
+  text-align: center;
+  margin-bottom: 20px;
+
+}
+
+
+input,
+textarea {
+
   width: 100%;
   margin-bottom: 10px;
-  padding: 10px;
+  padding: 12px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
+
 }
 
+
+textarea {
+
+  min-height: 80px;
+  resize: vertical;
+
+}
+
+
 button {
-  padding: 10px;
-  margin-top: 10px;
+
+  padding: 12px;
   border: none;
   background: #0d2c5a;
   color: white;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 15px;
+
 }
+
 
 button:hover {
+
   background: #091f3d;
+
 }
 
-/* RESUME */
+
+/* =========================
+   RESUME
+========================= */
+
 .resume {
+
   max-width: 900px;
   margin: 20px auto;
   background: white;
+
+  box-shadow:
+    0 5px 15px rgba(0,0,0,0.1);
+
 }
 
-/* HEADER */
+
+/* =========================
+   HEADER
+========================= */
+
 .top {
+
   background: #0d2c5a;
   color: white;
   padding: 20px;
+
 }
+
 
 .top h1 {
+
   margin: 0;
+
 }
+
 
 .top-info {
+
   display: flex;
   justify-content: space-between;
+
 }
 
-/* BODY */
+
+/* =========================
+   BODY
+========================= */
+
 .main {
+
   display: flex;
+
 }
+
+
+/* SIDEBAR */
 
 .sidebar {
+
   width: 30%;
   background: #e9edf3;
   padding: 20px;
+  box-sizing: border-box;
+
 }
+
+
+/* CONTENT */
 
 .content {
+
   width: 70%;
   padding: 20px;
+  box-sizing: border-box;
+
 }
+
+
+/* HEADINGS */
 
 h3 {
+
   border-bottom: 2px solid #0d2c5a;
+  padding-bottom: 5px;
+
 }
 
-/* BUTTON AREA */
+
+/* ACTIONS */
+
 .actions {
+
   text-align: center;
   margin: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
 }
 
-/* MOBILE */
+
+/* SKILLS */
+
+#r-skills {
+
+  padding-left: 20px;
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 768px) {
 
   .top-info {
+
     flex-direction: column;
+
   }
 
   .main {
+
     flex-direction: column;
+
   }
 
-  .sidebar, .content {
+  .sidebar,
+  .content {
+
     width: 100%;
-  }
 
+  }
 
   button {
+
     width: 100%;
+
   }
+
+  .auth-buttons {
+
+    flex-direction: column;
+
+  }
+
 }

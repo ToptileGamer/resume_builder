@@ -1,65 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Resume Builder</title>
-  <link rel="stylesheet" href="style.css">
+
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- NETLIFY IDENTITY -->
+  <script
+    type="text/javascript"
+    src="https://identity.netlify.com/v1/netlify-identity-widget.js">
+  </script>
 </head>
 <body>
 
-<div class="form">
-  <h2>Build Your Resume</h2>
+  <!-- AUTH BUTTONS -->
+  <div class="auth-buttons">
+    <button onclick="openAuth()">Login / Signup</button>
+    <button onclick="logout()">Logout</button>
+  </div>
 
-  <input id="name" placeholder="Full Name">
-  <input id="phone" placeholder="Phone">
-  <input id="email" placeholder="Email">
-  <input id="address" placeholder="Address">
+  <!-- USER INFO -->
+  <div class="user-info" id="user-info">
+    Not Logged In
+  </div>
 
-  <input id="father" placeholder="Father Name">
-  <input id="mother" placeholder="Mother Name">
+  <!-- FORM -->
+  <div class="form">
 
-  <textarea id="profile" placeholder="Career Objective"></textarea>
-  <textarea id="education" placeholder="Education"></textarea>
-  <textarea id="languages" placeholder="Languages"></textarea>
-  <textarea id="hobbies" placeholder="Hobbies"></textarea>
-  <textarea id="experience" placeholder="Work Experience"></textarea>
-  <textarea id="skills" placeholder="Skills (comma separated)"></textarea>
-  <textarea id="tech" placeholder="Technical Skills"></textarea>
-  <textarea id="projects" placeholder="Projects"></textarea>
+    <h2>Build Your Resume</h2>
 
-  <button onclick="goToResume()">Generate Resume</button>
-</div>
+    <input id="name" placeholder="Full Name">
+    <input id="phone" placeholder="Phone">
+    <input id="email" placeholder="Email">
+    <input id="address" placeholder="Address">
+
+    <input id="father" placeholder="Father Name">
+    <input id="mother" placeholder="Mother Name">
+
+    <textarea id="profile" placeholder="Career Objective"></textarea>
+
+    <textarea id="education" placeholder="Education"></textarea>
+
+    <textarea id="languages" placeholder="Languages"></textarea>
+
+    <textarea id="hobbies" placeholder="Hobbies"></textarea>
+
+    <textarea id="experience" placeholder="Work Experience"></textarea>
+
+    <textarea id="skills" placeholder="Skills (comma separated)"></textarea>
+
+    <textarea id="tech" placeholder="Technical Skills"></textarea>
+
+    <textarea id="projects" placeholder="Projects"></textarea>
+
+    <button onclick="goToResume()">Generate Resume</button>
+
+  </div>
 
 <script>
-// Autofill when coming back
+
+// ==========================
+// LOAD SAVED DATA
+// ==========================
+
 window.onload = function () {
+
   const data = JSON.parse(localStorage.getItem("resumeData"));
 
   if (data) {
+
     for (let key in data) {
+
       if (document.getElementById(key)) {
         document.getElementById(key).value = data[key];
       }
+
     }
+
   }
+
 };
 
+
+// ==========================
+// SAVE + GO TO RESUME
+// ==========================
+
 function goToResume() {
+
+  const user = netlifyIdentity.currentUser();
+
+  if (!user) {
+    alert("Please login first");
+    return;
+  }
+
   const fields = [
-    "name","phone","email","address","father","mother",
-    "profile","education","languages","hobbies",
-    "experience","skills","tech","projects"
+    "name",
+    "phone",
+    "email",
+    "address",
+    "father",
+    "mother",
+    "profile",
+    "education",
+    "languages",
+    "hobbies",
+    "experience",
+    "skills",
+    "tech",
+    "projects"
   ];
 
   let data = {};
 
   fields.forEach(id => {
+
     data[id] = document.getElementById(id).value;
+
   });
 
   localStorage.setItem("resumeData", JSON.stringify(data));
+
   window.location.href = "resume.html";
+
 }
+
+
+// ==========================
+// NETLIFY AUTH
+// ==========================
+
+function openAuth() {
+  netlifyIdentity.open();
+}
+
+function logout() {
+  netlifyIdentity.logout();
+}
+
+
+if (window.netlifyIdentity) {
+
+  netlifyIdentity.on("init", user => {
+
+    const userInfo = document.getElementById("user-info");
+
+    if (user) {
+
+      userInfo.innerHTML =
+        "Logged in as: <b>" + user.email + "</b>";
+
+    } else {
+
+      userInfo.innerHTML = "Not Logged In";
+
+    }
+
+  });
+
+
+  netlifyIdentity.on("login", user => {
+
+    alert("Welcome " + user.email);
+
+    document.getElementById("user-info").innerHTML =
+      "Logged in as: <b>" + user.email + "</b>";
+
+    netlifyIdentity.close();
+
+  });
+
+
+  netlifyIdentity.on("logout", () => {
+
+    alert("Logged Out");
+
+    document.getElementById("user-info").innerHTML =
+      "Not Logged In";
+
+  });
+
+  netlifyIdentity.init();
+
+}
+
 </script>
 
 </body>
